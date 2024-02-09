@@ -24,29 +24,61 @@ public class Servidor {
 		// 4. Trato de abrir Socket en el puerto indicado
 		try {
 			server = new ServerSocket(PORT);
-			System.out.println("Server running! Listening on port [" + PORT + "]");
+			System.out.println("Server running! Listening on port [ " + PORT + " ]");
 			
 			// 5. Acepto la conexión entrante del cliente
 			s = server.accept();
-			System.out.println("Connection established succesfully from [" + s.getInetAddress() + "] on port [" + PORT + "]");
+			System.out.println("Connection established succesfully from [ " + s.getInetAddress() + " ] on port [ " + PORT + " ]");
 			
 			// 6. Abro canales de comunicación
 			input = new DataInputStream(s.getInputStream());
 			output = new DataOutputStream(s.getOutputStream());
 			
-			// 7. Recibo los datos procedentes del cliente
+			// 7. Recibo los datos procedentes del cliente: operadores y codigo de operacion
+			// - 0: Suma
+			// - 1: Resta
+			// - 2: Multiplicacion
+			// - 3: Division
 			double num1 = input.readDouble();
 			double num2 = input.readDouble();
-			// TODO: leer código de la operación
+			int op = input.readInt();
 			
-			System.out.println("Client sent numbers " + num1 + " and " + num2);
+			// Elijo la operación en función del codigo de la operacion
+			Calculadora calc = new Calculadora();
+			
+			switch (op) {
+				case 0:
+					output.writeUTF(num1 + " + " + num2 + " = " + calc.Suma(num1, num2));
+					break;
+				case 1:
+					output.writeUTF(num1 + " - " + num2 + " = " + calc.Resta(num1, num2));
+					break;
+				case 2:
+					output.writeUTF(num1 + " x " + num2 + " = " + calc.Multiplicacion(num1, num2));
+					break;
+				case 3:
+					try {
+						output.writeUTF(num1 + " % " + num2 + " = " + calc.Division(num1, num2));
+					} catch (ArithmeticException e)
+					{
+						output.writeUTF(e.getMessage());
+					}
+					break;
+				default:
+					// No debería entrar aquí nunca, pero lo incluyo por respetar la sintaxis de la estructura de control
+					output.writeUTF("Unknown option..."); 
+					break;
+			}
 			
 			// 8. Acuse de recibo al cliente
-			output.writeUTF("Got " + num1 + " and " + num2);
+			output.writeUTF("Got " + num1 + " and " + num2 + " and operation " + op);
 			
-			// 9. Cierro socket
+			// 9. Cierro socket y flujos
 			s.close();
 			System.out.println("Client disconnected. Have a nice day!");
+			
+			input.close();
+			output.close();
 			
 			
 		} catch (IOException e) {

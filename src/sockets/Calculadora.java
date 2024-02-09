@@ -14,7 +14,7 @@ public class Calculadora {
 		return (a * b);
 	}
 	
-	public double Division(double a, double b) throws ArithmeticException {
+	public double Division(double a, double b) throws ArithmeticException { // Manejo una posible división por cero
 		return (a / b);
 	}
 }

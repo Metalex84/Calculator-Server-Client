@@ -23,26 +23,39 @@ public class Cliente {
 		DataInputStream input;
 		DataOutputStream output;
 		
+		JOptionPane.showMessageDialog(null, "Welcome to JCalculator v1.0!");
+
 		// 4. Trato de establecer Socket con el servidor
 		try {
 			sc = new Socket(HOST, PORT);
-			JOptionPane.showMessageDialog(null, "Connection established through port [" + PORT + "]");
 			
-			//  Abro los canales de comunicación con el servidor
+			// 5. Abro los canales de comunicación con el servidor
 			input = new DataInputStream(sc.getInputStream());
 			output = new DataOutputStream(sc.getOutputStream());
 			
-			// TODO: 6. Capturo la información del usuario
+			// 6. Capturo los datos del usuario
+			String value1 = JOptionPane.showInputDialog("Give me number #1: ");
+			double n1 = Double.parseDouble(value1);
+			String value2 = JOptionPane.showInputDialog("Give me number #2: ");
+			double n2 = Double.parseDouble(value2);
+			
+			final Object[] OPERATIONS = { "+", "-", "x", "%" };
+			Object operation = JOptionPane.showOptionDialog(null, "Choose an operation", "Warning", JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, null, OPERATIONS, OPERATIONS[0]);
 			
 			// 7. Mando información del cliente al servidor
-			output.writeDouble(3.14159);
-			output.writeDouble(2.74258);
-			
+			output.writeDouble(n1);
+			output.writeDouble(n2);
+			output.writeInt((int)operation);
 			// 8. Leo la respuesta desde el servidor
-			JOptionPane.showMessageDialog(null, "Server replied: [" + input.readUTF() + "]");
+			JOptionPane.showMessageDialog(null, input.readUTF());
 			
-			// 9. Cierro el socket
+			// 9. Cierro socket y flujos
 			sc.close();
+			input.close();
+			output.close();
+			
+			// 10. Y me despido :)
+			JOptionPane.showMessageDialog(null, "Goodbye!");
 			
 		} catch (UnknownHostException e) {
 			System.err.println("Cannot reach server on port [" + PORT + "]\n" + e.getMessage());
