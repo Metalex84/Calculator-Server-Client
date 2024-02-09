@@ -70,13 +70,9 @@ public class Servidor {
 					break;
 			}
 			
-			// 8. Acuse de recibo al cliente
-			output.writeUTF("Got " + num1 + " and " + num2 + " and operation " + op);
-			
-			// 9. Cierro socket y flujos
+			// 8. Cierro socket y flujos
 			s.close();
 			System.out.println("Client disconnected. Have a nice day!");
-			
 			input.close();
 			output.close();
 			

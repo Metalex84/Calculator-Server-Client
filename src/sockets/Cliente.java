@@ -33,10 +33,19 @@ public class Cliente {
 			input = new DataInputStream(sc.getInputStream());
 			output = new DataOutputStream(sc.getOutputStream());
 			
-			// 6. Capturo los datos del usuario
-			String value1 = JOptionPane.showInputDialog("Give me number #1: ");
+			// 6. Capturo los datos del usuario, controlando que no entran valores nulos
+			String value1 = null;
+			String value2 = null;
+			do {
+				value1 = JOptionPane.showInputDialog("Give me number #1: ");	
+			} while (value1 == null || value1.trim().isEmpty());
+			
+			do {
+				value2 = JOptionPane.showInputDialog("Give me number #2: ");
+			} while (value2 == null || value2.trim().isEmpty());
+			
+			// y los guardo como numeros para enviarlos al servidor
 			double n1 = Double.parseDouble(value1);
-			String value2 = JOptionPane.showInputDialog("Give me number #2: ");
 			double n2 = Double.parseDouble(value2);
 			
 			final Object[] OPERATIONS = { "+", "-", "x", "%" };
